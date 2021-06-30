@@ -1,14 +1,19 @@
+# frozen_string_literal: true
+
 require_relative 'hand'
+require_relative 'bank'
 
 class Player
-  attr_reader :name
-  attr_accessor :deposit, :hand, :score
+  BET = 10
+  WIN_BET = BET * 2
+
+  attr_reader :name, :bank
+  attr_accessor :hand
 
   def initialize(name)
     @name = name
     @hand = Hand.new
-    @deposit = 100
-    @score = 0
+    @bank = Bank.new(100)
   end
 
   def get_card(deck)
@@ -19,44 +24,31 @@ class Player
     @hand.cards_count
   end
 
-  def give_money(value = 0)
-    raise StandardError unless value <= @deposit
-    @deposit -= value
-    value
-  end
-
-  def take_money(value = 0)
-    @deposit += value
-  end
-
   def make_bet
-    if @deposit > 10
-      @deposit -= 10
-    else
-      puts 'Not enough money!'
-      exit
-    end
+    @bank.minus(BET)
+  end
+
+  def take_bet_money
+    @bank.plus(BET)
+  end
+
+  def take_win_bet
+    @bank.plus(WIN_BET)
   end
 
   def clear_info
-    @hand = Hand.new
+    @hand.clear_hand
   end
 
   def score
     @hand.count_score
   end
 
+  def over_max?
+    @hand.over_max?
+  end
+
   def open_cards
     @hand.show_cards
   end
 end
-
-
-
-
-
-  
-
-
-
-  

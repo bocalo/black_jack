@@ -1,14 +1,19 @@
+# frozen_string_literal: true
+
 class Hand
-  attr_reader :cards, :score, :deposit
+  attr_reader :cards, :score
 
   def initialize
-    @cards  = []
+    @cards = []
     @score = 0
-    @deposit = 100
   end
 
-  def hit!(deck) # взять карту из колоды
+  def hit!(deck)
     @cards << deck.deck.shift
+  end
+
+  def clear_hand
+    @cards = []
   end
 
   def cards_count
@@ -29,6 +34,8 @@ class Hand
     score -= 10 if ace == true && score > 21
     @score = score
   end
+
+  def over_max?
+    return true if @score < 22
+  end
 end
-
-
